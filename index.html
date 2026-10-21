@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학생들의 손그림 날씨 앱 (v1 & v2 히스토리)</title>
+    <title>학생들의 손그림 날씨 앱</title>
+    <!-- PWA Web App Manifest & Theme Color -->
+    <meta name="theme-color" content="#bae6fd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="손그림날씨">
+    
+    <!-- Dynamic Web Manifest Link generated via Data URI -->
+    <link rel="manifest" id="manifest-placeholder">
+
     <!-- Tailwind CSS for utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -113,22 +122,6 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-6 bg-slate-200">
 
-    <!-- VERSION SELECTOR TOP BAR -->
-    <div class="w-full max-w-md bg-white border-4 border-slate-800 rounded-2xl p-2.5 mb-4 shadow-lg flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <span class="bg-amber-400 border-2 border-slate-800 px-2.5 py-0.5 rounded-lg text-xs font-black text-slate-900">버전 선택</span>
-            <span id="version-label" class="text-xs text-slate-600 font-bold">버전을 선택해서 변경 내역을 확인하세요</span>
-        </div>
-        <div class="flex bg-slate-100 p-1 rounded-xl border-2 border-slate-800">
-            <button id="btn-v1" onclick="switchVersion('v1')" class="px-3 py-1 text-sm font-bold rounded-lg transition-all bg-sky-500 text-white shadow-sm border border-slate-800">
-                v1.0 (원본)
-            </button>
-            <button id="btn-v2" onclick="switchVersion('v2')" class="px-3 py-1 text-sm font-bold rounded-lg transition-all text-slate-700 hover:bg-slate-200">
-                v2.0 (업데이트)
-            </button>
-        </div>
-    </div>
-
     <!-- MAIN APP CONTAINER (Mobile Frame look) -->
     <div class="w-full max-w-md bg-sky-200 rounded-[35px] border-4 border-slate-800 p-4 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[780px]">
         
@@ -141,26 +134,57 @@
         </div>
 
         <div>
-            <!-- HEADER CONTROLS (Location selector & temperature simulator) -->
-            <div class="flex justify-between items-center mb-4 z-10 relative bg-white/90 p-2.5 rounded-2xl border-2 border-slate-800">
-                <div class="flex items-center gap-1.5 text-slate-800 font-bold text-lg flex-1 mr-2">
-                    <i data-lucide="map-pin" class="text-red-500 w-5 h-5 flex-shrink-0"></i>
-                    <select id="city-select" onchange="updateWeatherByCity()" class="bg-transparent text-slate-800 focus:outline-none cursor-pointer font-bold text-base sm:text-lg w-full">
-                        <option value="Seoul">서울특별시</option>
-                        <option value="Busan">부산광역시</option>
-                        <option value="Daegu">대구광역시</option>
-                        <option value="Incheon">인천광역시</option>
-                        <option value="Gwangju">광주광역시</option>
-                        <option value="Daejeon">대전광역시</option>
-                        <option value="Ulsan">울산광역시</option>
-                        <option value="Jeju">제주특별자치도</option>
-                    </select>
+            <!-- APP HEADER LOGO BAR & LOCATION CONTROLS -->
+            <div class="flex flex-col gap-2 mb-4 z-10 relative">
+                <!-- App Logo Banner (Hand-drawn Style) -->
+                <div class="flex items-center justify-between bg-white/90 px-3 py-2 rounded-2xl border-2 border-slate-800 shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <!-- App Icon (Sun & Cloud Hand-drawn SVG Logo) -->
+                        <div class="w-9 h-9 rounded-xl bg-amber-200 border-2 border-slate-800 flex items-center justify-center shadow-xs">
+                            <svg width="28" height="28" viewBox="0 0 100 100">
+                                <circle cx="38" cy="38" r="20" fill="#facc15" stroke="#1e293b" stroke-width="4"/>
+                                <path d="M 38 10 L 38 4 M 38 66 L 38 72 M 10 38 L 4 38 M 66 38 L 72 38" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M 50 65 Q 40 45 60 45 Q 70 35 82 45 Q 92 50 88 65 Q 85 75 70 75 Q 55 75 50 65 Z" fill="#ffffff" stroke="#1e293b" stroke-width="4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-slate-900 font-black text-base leading-none">손그림 날씨</h1>
+                            <span class="text-[10px] text-slate-500 font-bold">우리들의 상큼한 일기예보</span>
+                        </div>
+                    </div>
+                    <!-- PWA Install Button (Shown if installable) -->
+                    <button id="pwa-install-btn" onclick="installPWA()" class="hidden bg-emerald-400 hover:bg-emerald-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs px-2.5 py-1 rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-1">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span>앱 설치</span>
+                    </button>
                 </div>
-                <!-- Live Fetch Button -->
-                <button onclick="fetchRealtimeWeather()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs px-2.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1 transition-all active:scale-95 flex-shrink-0">
-                    <i data-lucide="refresh-cw" id="refresh-icon" class="w-3.5 h-3.5"></i>
-                    <span>실시간 갱신</span>
-                </button>
+
+                <!-- Location selector & GPS/Refresh controls -->
+                <div class="flex justify-between items-center bg-white/90 p-2.5 rounded-2xl border-2 border-slate-800">
+                    <div class="flex items-center gap-1.5 text-slate-800 font-bold text-lg flex-1 mr-1">
+                        <i data-lucide="map-pin" class="text-red-500 w-5 h-5 flex-shrink-0"></i>
+                        <select id="city-select" onchange="updateWeatherByCity()" class="bg-transparent text-slate-800 focus:outline-none cursor-pointer font-bold text-base sm:text-lg w-full">
+                            <option value="GPS">내 현재 위치 (GPS)</option>
+                            <option value="Seoul" selected>서울특별시</option>
+                            <option value="Busan">부산광역시</option>
+                            <option value="Daegu">대구광역시</option>
+                            <option value="Incheon">인천광역시</option>
+                            <option value="Gwangju">광주광역시</option>
+                            <option value="Daejeon">대전광역시</option>
+                            <option value="Ulsan">울산광역시</option>
+                            <option value="Jeju">제주특별자치도</option>
+                        </select>
+                    </div>
+                    <!-- GPS Auto-locate Button -->
+                    <button onclick="requestGPSLocation()" title="GPS 현재 위치 감지" class="bg-sky-400 hover:bg-sky-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs p-1.5 rounded-xl shadow-xs transition-all active:scale-95 mr-1 flex-shrink-0">
+                        <i data-lucide="crosshair" id="gps-icon" class="w-4 h-4"></i>
+                    </button>
+                    <!-- Live Fetch Button -->
+                    <button onclick="fetchRealtimeWeather()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs px-2 py-1.5 rounded-xl shadow-xs flex items-center gap-1 transition-all active:scale-95 flex-shrink-0">
+                        <i data-lucide="refresh-cw" id="refresh-icon" class="w-3.5 h-3.5"></i>
+                        <span>갱신</span>
+                    </button>
+                </div>
             </div>
 
             <!-- TOP SECTION: CALENDAR TEMP & CHARACTER SPEECH -->
@@ -202,8 +226,8 @@
                 </div>
             </div>
 
-            <!-- v2 NEW FEATURE: EXTRA WEATHER STATS (Visible only in v2) -->
-            <div id="v2-stats-panel" class="hidden my-3 grid grid-cols-3 gap-2 relative z-10">
+            <!-- EXTRA WEATHER STATS PANEL -->
+            <div id="v2-stats-panel" class="my-3 grid grid-cols-3 gap-2 relative z-10">
                 <div class="sketch-box-yellow p-2 rounded-xl text-center">
                     <div class="text-xs text-slate-600 font-bold">습도</div>
                     <div id="humidity-val" class="text-base font-extrabold text-slate-800">55%</div>
@@ -221,10 +245,10 @@
             <!-- MIDDLE SECTION: HOURLY WEATHER GRAPH -->
             <div class="mt-3 mb-3 sketch-box-blue p-3.5 rounded-2xl relative z-10">
                 <div class="flex items-center justify-between mb-2">
-                    <div class="inline-block bg-amber-300 border-2 border-slate-800 px-4 py-1 rounded-full text-slate-900 font-extrabold text-base transform -rotate-1 shadow-sm">
+                    <div class="inline-block bg-amber-300 border-2 border-slate-800 px-4 py-1 rounded-full text-slate-900 font-extrabold text-base transform -rotate-1 shadow-xs">
                         시간별 날씨
                     </div>
-                    <span id="v2-badge-hourly" class="hidden bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-800">v2 향상됨</span>
+                    <span id="location-badge" class="bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-slate-800">서울</span>
                 </div>
 
                 <div class="relative w-full h-32 mt-1">
@@ -234,17 +258,17 @@
                 </div>
 
                 <div class="grid grid-cols-4 gap-1 text-center mt-1">
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-sm">9시</span></div>
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-sm">12시</span></div>
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-sm">3시</span></div>
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-sm">6시</span></div>
+                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">9시</span></div>
+                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">12시</span></div>
+                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">3시</span></div>
+                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">6시</span></div>
                 </div>
             </div>
 
-            <!-- v2 NEW FEATURE: WEEKLY FORECAST (Visible only in v2) -->
-            <div id="v2-weekly-panel" class="hidden mb-3 bg-white border-3 border-slate-800 p-3 rounded-2xl relative z-10 shadow-sm">
+            <!-- WEEKLY FORECAST PANEL -->
+            <div id="v2-weekly-panel" class="mb-3 bg-white border-3 border-slate-800 p-3 rounded-2xl relative z-10 shadow-xs">
                 <div class="text-slate-800 font-extrabold text-sm mb-2 flex items-center justify-between">
-                    <span>📅 이번 주 날씨 예보 (v2 신규)</span>
+                    <span>📅 주간 날씨 예보</span>
                 </div>
                 <div class="grid grid-cols-5 gap-1.5 text-center text-xs" id="weekly-forecast-container">
                     <!-- Dynamic weekly weather forecast rendered via JS -->
@@ -285,23 +309,12 @@
         </div>
     </div>
 
-    <!-- VERSION RELEASE NOTES CARD -->
-    <div class="w-full max-w-md bg-white border-3 border-slate-800 rounded-2xl p-4 mt-4 shadow-md">
-        <h3 id="changelog-title" class="font-extrabold text-base text-slate-800 mb-1 flex items-center gap-2">
-            <i data-lucide="history" class="w-4 h-4 text-sky-600"></i>
-            <span>v1.0 버전에 대하여</span>
-        </h3>
-        <p id="changelog-desc" class="text-xs text-slate-600 leading-relaxed font-semibold">
-            학생들의 손그림 일러스트 디자인 원본 버전입니다. 기본 시간별 날씨 및 온도 추천 캐릭터 기능이 포함되어 있습니다.
-        </p>
-    </div>
-
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // App State
         const state = {
-            version: 'v1', // 'v1' or 'v2'
             city: 'Seoul',
+            customLatLon: null, // For GPS coordinates
             temp: 25,
             humidity: 55,
             windSpeed: 2.5,
@@ -317,40 +330,133 @@
             ]
         };
 
-        lucide.createIcons();
+        let deferredPrompt = null;
 
-        // Switch App Version (v1 <-> v2)
-        function switchVersion(ver) {
-            state.version = ver;
-            const btnV1 = document.getElementById('btn-v1');
-            const btnV2 = document.getElementById('btn-v2');
-            const statsPanel = document.getElementById('v2-stats-panel');
-            const weeklyPanel = document.getElementById('v2-weekly-panel');
-            const badgeHourly = document.getElementById('v2-badge-hourly');
-            const changelogTitle = document.getElementById('changelog-title');
-            const changelogDesc = document.getElementById('changelog-desc');
+        // PWA Setup & Manifest Generation
+        function setupPWA() {
+            // Generate Data-URI PWA App Icon (SVG)
+            const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#bae6fd"/><circle cx="50" cy="42" r="22" fill="#facc15" stroke="#1e293b" stroke-width="5"/><path d="M 50 10 L 50 4 M 50 74 L 50 80 M 18 42 L 12 42 M 82 42 L 88 42" stroke="#1e293b" stroke-width="5" stroke-linecap="round"/><path d="M 35 65 Q 25 45 45 45 Q 55 35 67 45 Q 77 50 73 65 Q 70 75 55 75 Q 40 75 35 65 Z" fill="#ffffff" stroke="#1e293b" stroke-width="5"/></svg>`;
+            const iconUrl = 'data:image/svg+xml;base64,' + btoa(iconSvg);
 
-            if (ver === 'v1') {
-                btnV1.className = "px-3 py-1 text-sm font-bold rounded-lg transition-all bg-sky-500 text-white shadow-sm border border-slate-800";
-                btnV2.className = "px-3 py-1 text-sm font-bold rounded-lg transition-all text-slate-700 hover:bg-slate-200";
-                statsPanel.classList.add('hidden');
-                weeklyPanel.classList.add('hidden');
-                badgeHourly.classList.add('hidden');
+            const manifest = {
+                name: "학생 손그림 날씨 앱",
+                short_name: "손그림날씨",
+                description: "학생들의 아기자기한 손그림으로 확인하는 날씨 앱",
+                start_url: "./",
+                display: "standalone",
+                background_color: "#bae6fd",
+                theme_color: "#bae6fd",
+                icons: [
+                    {
+                        src: iconUrl,
+                        sizes: "512x512",
+                        type: "image/svg+xml",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
 
-                changelogTitle.innerHTML = `<i data-lucide="history" class="w-4 h-4 text-sky-600"></i><span>v1.0 버전에 대하여</span>`;
-                changelogDesc.innerText = "학생들의 손그림 일러스트 디자인 원본 버전입니다. 기본 시간별 날씨 및 온도 추천 캐릭터 기능이 포함되어 있습니다.";
-            } else {
-                btnV2.className = "px-3 py-1 text-sm font-bold rounded-lg transition-all bg-emerald-500 text-white shadow-sm border border-slate-800";
-                btnV1.className = "px-3 py-1 text-sm font-bold rounded-lg transition-all text-slate-700 hover:bg-slate-200";
-                statsPanel.classList.remove('hidden');
-                weeklyPanel.classList.remove('hidden');
-                badgeHourly.classList.remove('hidden');
+            const stringManifest = JSON.stringify(manifest);
+            const blob = new Blob([stringManifest], { type: 'application/json' });
+            const manifestUrl = URL.createObjectURL(blob);
+            document.getElementById('manifest-placeholder').setAttribute('href', manifestUrl);
 
-                changelogTitle.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i><span>v2.0 업데이트 변경 내역</span>`;
-                changelogDesc.innerText = "✨ v2.0 변경점: 체감온도/습도/풍속 상세 정보 패널 추가, 5일간의 주간 날씨 예보 기능 추가, 데이터 정밀도 향상.";
+            // Register Inline Service Worker for Offline Capabilities
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'sketch-weather-v1';
+                    self.addEventListener('install', (e) => {
+                        self.skipWaiting();
+                    });
+                    self.addEventListener('activate', (e) => {
+                        e.waitUntil(clients.claim());
+                    });
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(
+                            caches.match(e.request).then((response) => {
+                                return response || fetch(e.request).catch(() => {
+                                    return new Response('offline');
+                                });
+                            })
+                        );
+                    });
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW registration error:', err));
             }
-            lucide.createIcons();
-            updateUI();
+
+            // Capture PWA Install Prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const installBtn = document.getElementById('pwa-install-btn');
+                if (installBtn) installBtn.classList.remove('hidden');
+            });
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('pwa-install-btn').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // GPS Geolocation Handler
+        function requestGPSLocation(silent = false) {
+            const gpsIcon = document.getElementById('gps-icon');
+            if (gpsIcon) gpsIcon.classList.add('animate-spin');
+
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        state.customLatLon = {
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude
+                        };
+                        
+                        // Select "GPS" in city dropdown
+                        const citySelect = document.getElementById('city-select');
+                        if (citySelect) citySelect.value = "GPS";
+                        state.city = "GPS";
+
+                        await fetchRealtimeWeather();
+                        if (gpsIcon) gpsIcon.classList.remove('animate-spin');
+                    },
+                    (error) => {
+                        if (gpsIcon) gpsIcon.classList.remove('animate-spin');
+                        if (!silent) {
+                            console.warn("GPS 수신 실패, 기본 위치(서울)를 사용합니다.", error);
+                        }
+                        // Fallback to Seoul
+                        state.city = "Seoul";
+                        const citySelect = document.getElementById('city-select');
+                        if (citySelect) citySelect.value = "Seoul";
+                        fetchRealtimeWeather();
+                    },
+                    { timeout: 7000, enableHighAccuracy: true }
+                );
+            } else {
+                if (gpsIcon) gpsIcon.classList.remove('animate-spin');
+                if (!silent) console.warn("GPS를 지원하지 않는 브라우저입니다.");
+                fetchRealtimeWeather();
+            }
+        }
+
+        function updateWeatherByCity() {
+            const select = document.getElementById('city-select');
+            state.city = select.value;
+            if (state.city === 'GPS') {
+                requestGPSLocation();
+            } else {
+                state.customLatLon = null;
+                fetchRealtimeWeather();
+            }
         }
 
         function setTodayDate() {
@@ -367,20 +473,29 @@
             if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
             const cityCoordinates = {
-                'Seoul': { lat: 37.5665, lon: 126.9780 },
-                'Busan': { lat: 35.1796, lon: 129.0756 },
-                'Daegu': { lat: 35.8714, lon: 128.6014 },
-                'Incheon': { lat: 37.4563, lon: 126.7052 },
-                'Gwangju': { lat: 35.1595, lon: 126.8526 },
-                'Daejeon': { lat: 36.3510, lon: 127.3850 },
-                'Ulsan': { lat: 35.5383, lon: 129.3114 },
-                'Jeju': { lat: 33.4996, lon: 126.5312 }
+                'Seoul': { lat: 37.5665, lon: 126.9780, name: '서울특별시' },
+                'Busan': { lat: 35.1796, lon: 129.0756, name: '부산광역시' },
+                'Daegu': { lat: 35.8714, lon: 128.6014, name: '대구광역시' },
+                'Incheon': { lat: 37.4563, lon: 126.7052, name: '인천광역시' },
+                'Gwangju': { lat: 35.1595, lon: 126.8526, name: '광주광역시' },
+                'Daejeon': { lat: 36.3510, lon: 127.3850, name: '대전광역시' },
+                'Ulsan': { lat: 35.5383, lon: 129.3114, name: '울산광역시' },
+                'Jeju': { lat: 33.4996, lon: 126.5312, name: '제주특별자치도' }
             };
 
-            const coords = cityCoordinates[state.city] || cityCoordinates['Seoul'];
+            let coords = cityCoordinates[state.city] || cityCoordinates['Seoul'];
+            let locationDisplayName = coords.name || '서울';
+
+            if (state.city === 'GPS' && state.customLatLon) {
+                coords = state.customLatLon;
+                locationDisplayName = '내 위치 (GPS)';
+            }
+
+            const badge = document.getElementById('location-badge');
+            if (badge) badge.innerText = locationDisplayName;
 
             try {
-                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,windspeed_10m&timezone=Asia%2FTokyo`);
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,apparent_temperature,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`);
                 const data = await response.json();
 
                 if (data && data.current_weather) {
@@ -401,6 +516,25 @@
                             ];
                         }
                     }
+
+                    if (data.daily && data.daily.time) {
+                        const daysKorean = ['일', '월', '화', '수', '목', '금', '토'];
+                        state.weeklyData = data.daily.time.slice(0, 5).map((t, idx) => {
+                            const dateObj = new Date(t);
+                            const dayName = daysKorean[dateObj.getDay()];
+                            const code = data.daily.weathercode ? data.daily.weathercode[idx] : 0;
+                            let icon = 'sun';
+                            if (code > 0 && code <= 3) icon = 'cloud';
+                            else if (code > 3) icon = 'rain';
+                            return {
+                                day: dayName,
+                                tempMin: Math.round(data.daily.temperature_2m_min[idx]),
+                                tempMax: Math.round(data.daily.temperature_2m_max[idx]),
+                                icon: icon
+                            };
+                        });
+                    }
+
                     updateUI();
                 }
             } catch (error) {
@@ -417,4 +551,182 @@
             if (temp < 18) {
                 container.innerHTML = `
                 <svg class="w-full h-full shiver-anim" viewBox="0 0 100 100">
-                    <path d="M 30 40 Q 20 60 25 80 Q 50 85 75 80 Q 80 60 70 40 Z" fill="#7c2d12" stroke
+                    <path d="M 30 40 Q 20 60 25 80 Q 50 85 75 80 Q 80 60 70 40 Z" fill="#7c2d12" stroke="#1e293b" stroke-width="3"/>
+                    <rect x="22" y="38" width="56" height="12" rx="6" fill="#ef4444" stroke="#1e293b" stroke-width="2"/>
+                    <circle cx="50" cy="30" r="18" fill="#fde047" stroke="#1e293b" stroke-width="3"/>
+                    <circle cx="43" cy="27" r="2" fill="#1e293b"/>
+                    <circle cx="57" cy="27" r="2" fill="#1e293b"/>
+                    <path d="M 45 35 Q 50 32 55 35" stroke="#1e293b" stroke-width="2" fill="none"/>
+                    <circle cx="38" cy="31" r="3" fill="#60a5fa" opacity="0.8"/>
+                    <circle cx="62" cy="31" r="3" fill="#60a5fa" opacity="0.8"/>
+                </svg>`;
+            } else if (temp <= 26) {
+                container.innerHTML = `
+                <svg class="w-full h-full bounce-element" viewBox="0 0 100 100">
+                    <path d="M 32 42 Q 20 60 28 80 Q 50 85 72 80 Q 80 60 68 42 Z" fill="#f97316" stroke="#1e293b" stroke-width="3"/>
+                    <circle cx="50" cy="30" r="18" fill="#fde047" stroke="#1e293b" stroke-width="3"/>
+                    <circle cx="43" cy="27" r="2.5" fill="#1e293b"/>
+                    <circle cx="57" cy="27" r="2.5" fill="#1e293b"/>
+                    <path d="M 44 34 Q 50 39 56 34" stroke="#1e293b" stroke-width="2.5" fill="none"/>
+                    <circle cx="38" cy="32" r="3" fill="#f43f5e" opacity="0.4"/>
+                    <circle cx="62" cy="32" r="3" fill="#f43f5e" opacity="0.4"/>
+                </svg>`;
+            } else {
+                container.innerHTML = `
+                <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <path d="M 32 42 Q 20 60 28 80 Q 50 85 72 80 Q 80 60 68 42 Z" fill="#38bdf8" stroke="#1e293b" stroke-width="3"/>
+                    <circle cx="50" cy="30" r="18" fill="#fde047" stroke="#1e293b" stroke-width="3"/>
+                    <path d="M 36 24 L 64 24 M 38 28 L 62 28" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+                    <path d="M 45 35 Q 50 38 55 35" stroke="#1e293b" stroke-width="2.5" fill="none"/>
+                    <path d="M 68 20 C 68 20 74 24 71 28 C 68 32 65 20 68 20 Z" fill="#38bdf8" stroke="#1e293b" stroke-width="1.5"/>
+                </svg>`;
+            }
+        }
+
+        // Render Clothing & Activity SVGs
+        function renderRecommendations(temp) {
+            const clothesIcon = document.getElementById('clothes-icon');
+            const clothesText = document.getElementById('clothes-text');
+            const activityIcon = document.getElementById('activity-icon');
+            const activityText = document.getElementById('activity-text');
+
+            if (temp < 18) {
+                clothesIcon.innerHTML = `
+                <svg class="w-10 h-10" viewBox="0 0 60 60">
+                    <path d="M 15 15 L 25 10 L 35 10 L 45 15 L 55 30 L 48 35 L 42 22 L 42 50 L 18 50 L 18 22 L 12 35 L 5 30 Z" fill="#f87171" stroke="#1e293b" stroke-width="3"/>
+                </svg>`;
+                clothesText.innerText = "도톰한 옷을 입으세요!";
+
+                activityIcon.innerHTML = `
+                <svg class="w-10 h-10" viewBox="0 0 60 60">
+                    <path d="M 10 35 Q 30 15 50 35" stroke="#3b82f6" stroke-width="4" fill="none"/>
+                    <circle cx="30" cy="35" r="12" fill="#fde047" stroke="#1e293b" stroke-width="3"/>
+                </svg>`;
+                activityText.innerText = "실내 활동을 추천해요.";
+            } else if (temp <= 26) {
+                clothesIcon.innerHTML = `
+                <svg class="w-10 h-10" viewBox="0 0 60 60">
+                    <path d="M 18 15 L 25 10 L 35 10 L 42 15 L 50 22 L 44 26 L 40 20 L 40 48 L 20 48 L 20 20 L 16 26 L 10 22 Z" fill="#fbbf24" stroke="#1e293b" stroke-width="3"/>
+                </svg>`;
+                clothesText.innerText = "가벼운 겉옷이 좋아요.";
+
+                activityIcon.innerHTML = `
+                <svg class="w-10 h-10" viewBox="0 0 60 60">
+                    <circle cx="20" cy="20" r="8" fill="#f87171" stroke="#1e293b" stroke-width="2.5"/>
+                    <path d="M 20 28 L 20 42 M 20 34 L 32 30 M 20 42 L 12 54 M 20 42 L 30 54" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>`;
+                activityText.innerText = "가볍게 달리기 가능!";
+            } else {
+                clothesIcon.innerHTML = `
+                <svg class="w-10 h-10" viewBox="0 0 60 60">
+                    <path d="M 20 15 L 26 10 L 34 10 L 40 15 L 42 28 L 36 28 L 36 48 L 24 48 L 24 28 L 18 28 Z" fill="#38bdf8" stroke="#1e293b" stroke-width="3"/>
+                </svg>`;
+                clothesText.innerText = "시원한 반팔 차림!";
+
+                activityIcon.innerHTML = `
+                <svg class="w-10 h-10" viewBox="0 0 60 60">
+                    <path d="M 10 40 Q 20 30 30 40 T 50 40 T 60 40" stroke="#0284c7" stroke-width="4" fill="none"/>
+                    <circle cx="30" cy="25" r="8" fill="#fde047" stroke="#1e293b" stroke-width="2.5"/>
+                </svg>`;
+                activityText.innerText = "물놀이 가기 딱 좋아요!";
+            }
+        }
+
+        // Render Hourly SVG Graph
+        function renderHourlyGraph(temps) {
+            const svg = document.getElementById('hourly-svg');
+            const minTemp = Math.min(...temps) - 2;
+            const maxTemp = Math.max(...temps) + 2;
+            const width = 300;
+            const height = 90;
+            const points = [];
+
+            temps.forEach((t, index) => {
+                const x = 30 + (index * (width - 60) / 3);
+                const y = height - ((t - minTemp) / (maxTemp - minTemp || 1) * (height - 30) + 15);
+                points.push({ x, y, temp: t });
+            });
+
+            let pathD = `M ${points[0].x} ${points[0].y}`;
+            for (let i = 1; i < points.length; i++) {
+                const prev = points[i - 1];
+                const curr = points[i];
+                const cpX1 = prev.x + (curr.x - prev.x) / 2;
+                const cpY1 = prev.y;
+                const cpX2 = prev.x + (curr.x - prev.x) / 2;
+                const cpY2 = curr.y;
+                pathD += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${curr.x} ${curr.y}`;
+            }
+
+            let svgContent = `
+                <path d="${pathD}" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/>
+            `;
+
+            points.forEach((p) => {
+                svgContent += `
+                    <circle cx="${p.x}" cy="${p.y}" r="6" fill="#facc15" stroke="#1e293b" stroke-width="2.5"/>
+                    <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" font-family="Jua" font-size="14" font-weight="bold" fill="#1e293b">${p.temp}°</text>
+                `;
+            });
+
+            svg.innerHTML = svgContent;
+        }
+
+        // Render Weekly Forecast
+        function renderWeeklyForecast() {
+            const container = document.getElementById('weekly-forecast-container');
+            if (!container) return;
+
+            let html = '';
+            state.weeklyData.forEach(item => {
+                let iconSvg = '';
+                if (item.icon === 'sun') {
+                    iconSvg = `<svg class="w-6 h-6 mx-auto" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#facc15" stroke="#1e293b" stroke-width="8"/></svg>`;
+                } else if (item.icon === 'cloud') {
+                    iconSvg = `<svg class="w-6 h-6 mx-auto" viewBox="0 0 100 100"><path d="M 20 60 Q 10 40 30 40 Q 40 25 60 40 Q 75 35 80 55 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="6"/></svg>`;
+                } else {
+                    iconSvg = `<svg class="w-6 h-6 mx-auto" viewBox="0 0 100 100"><path d="M 20 50 Q 10 30 30 30 Q 40 15 60 30 Q 75 25 80 45 Z" fill="#60a5fa" stroke="#1e293b" stroke-width="6"/><line x1="35" y1="65" x2="30" y2="80" stroke="#3b82f6" stroke-width="6"/><line x1="60" y1="65" x2="55" y2="80" stroke="#3b82f6" stroke-width="6"/></svg>`;
+                }
+
+                html += `
+                    <div class="bg-amber-50 p-1.5 rounded-xl border border-amber-200 flex flex-col items-center">
+                        <span class="font-extrabold text-slate-700">${item.day}</span>
+                        <div class="my-0.5">${iconSvg}</div>
+                        <span class="font-extrabold text-slate-800 text-[11px]">${item.tempMin}° / ${item.tempMax}°</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Main UI Update Function
+        function updateUI() {
+            document.getElementById('temp-display').innerText = state.temp;
+            
+            const comment = document.getElementById('weather-comment');
+            if (state.temp < 18) comment.innerText = "어제보다 추워요!";
+            else if (state.temp <= 26) comment.innerText = "날씨가 딱 좋아요!";
+            else comment.innerText = "오늘은 꽤 더워요!";
+
+            document.getElementById('humidity-val').innerText = `${state.humidity}%`;
+            document.getElementById('wind-val').innerText = `${state.windSpeed}m/s`;
+            document.getElementById('feels-val').innerText = `${state.feelsLike}°C`;
+
+            renderCharacter(state.temp);
+            renderRecommendations(state.temp);
+            renderHourlyGraph(state.hourlyTemps);
+            renderWeeklyForecast();
+
+            lucide.createIcons();
+        }
+
+        // Initialization
+        window.onload = function() {
+            setTodayDate();
+            setupPWA();
+            // Automatically request GPS on app launch
+            requestGPSLocation(true);
+        };
+    </script>
+</body>
+</html>
