@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학생들의 손그림 날씨 앱</title>
+    <title>학생들의 손그림 날씨 앱 (동글체)</title>
     <!-- PWA Web App Manifest & Theme Color -->
     <meta name="theme-color" content="#bae6fd">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,11 +17,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom Font (Jua for playful handwriting feel) -->
-    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Custom Font (Dongle Font for round cute comic feel) -->
+    <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Jua', 'Nanum Gothic', sans-serif;
+            font-family: 'Dongle', sans-serif;
+            font-weight: 400;
             background-color: #cbd5e1;
             user-select: none;
         }
@@ -56,7 +58,7 @@
             background: #ffffff;
             border: 3px solid #3b82f6;
             border-radius: 24px;
-            padding: 12px 20px;
+            padding: 8px 16px;
             box-shadow: 3px 3px 0px #93c5fd;
         }
 
@@ -135,9 +137,9 @@
 
         <div>
             <!-- APP HEADER LOGO BAR & LOCATION CONTROLS -->
-            <div class="flex flex-col gap-2 mb-4 z-10 relative">
+            <div class="flex flex-col gap-2 mb-2 z-10 relative">
                 <!-- App Logo Banner (Hand-drawn Style) -->
-                <div class="flex items-center justify-between bg-white/90 px-3 py-2 rounded-2xl border-2 border-slate-800 shadow-sm">
+                <div class="flex items-center justify-between bg-white/90 px-3 py-1.5 rounded-2xl border-2 border-slate-800 shadow-sm">
                     <div class="flex items-center gap-2">
                         <!-- App Icon (Sun & Cloud Hand-drawn SVG Logo) -->
                         <div class="w-9 h-9 rounded-xl bg-amber-200 border-2 border-slate-800 flex items-center justify-center shadow-xs">
@@ -148,22 +150,22 @@
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-slate-900 font-black text-base leading-none">손그림 날씨</h1>
-                            <span class="text-[10px] text-slate-500 font-bold">우리들의 상큼한 일기예보</span>
+                            <h1 class="text-slate-900 font-bold text-2xl leading-none pt-1">손그림 날씨</h1>
+                            <span class="text-lg text-slate-500 font-bold -mt-2 block leading-none">우리들의 상큼한 일기예보</span>
                         </div>
                     </div>
                     <!-- PWA Install Button (Shown if installable) -->
-                    <button id="pwa-install-btn" onclick="installPWA()" class="hidden bg-emerald-400 hover:bg-emerald-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs px-2.5 py-1 rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-1">
+                    <button id="pwa-install-btn" onclick="installPWA()" class="hidden bg-emerald-400 hover:bg-emerald-500 text-slate-900 border-2 border-slate-800 font-bold text-lg px-2.5 py-0.5 rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-1">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>
                         <span>앱 설치</span>
                     </button>
                 </div>
 
                 <!-- Location selector & GPS/Refresh controls -->
-                <div class="flex justify-between items-center bg-white/90 p-2.5 rounded-2xl border-2 border-slate-800">
-                    <div class="flex items-center gap-1.5 text-slate-800 font-bold text-lg flex-1 mr-1">
+                <div class="flex justify-between items-center bg-white/90 px-2.5 py-1 rounded-2xl border-2 border-slate-800">
+                    <div class="flex items-center gap-1 text-slate-800 font-bold text-2xl flex-1 mr-1">
                         <i data-lucide="map-pin" class="text-red-500 w-5 h-5 flex-shrink-0"></i>
-                        <select id="city-select" onchange="updateWeatherByCity()" class="bg-transparent text-slate-800 focus:outline-none cursor-pointer font-bold text-base sm:text-lg w-full">
+                        <select id="city-select" onchange="updateWeatherByCity()" class="bg-transparent text-slate-800 focus:outline-none cursor-pointer font-bold text-2xl w-full">
                             <option value="GPS">내 현재 위치 (GPS)</option>
                             <option value="Seoul" selected>서울특별시</option>
                             <option value="Busan">부산광역시</option>
@@ -176,11 +178,11 @@
                         </select>
                     </div>
                     <!-- GPS Auto-locate Button -->
-                    <button onclick="requestGPSLocation()" title="GPS 현재 위치 감지" class="bg-sky-400 hover:bg-sky-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs p-1.5 rounded-xl shadow-xs transition-all active:scale-95 mr-1 flex-shrink-0">
+                    <button onclick="requestGPSLocation()" title="GPS 현재 위치 감지" class="bg-sky-400 hover:bg-sky-500 text-slate-900 border-2 border-slate-800 font-bold p-1 rounded-xl shadow-xs transition-all active:scale-95 mr-1 flex-shrink-0">
                         <i data-lucide="crosshair" id="gps-icon" class="w-4 h-4"></i>
                     </button>
                     <!-- Live Fetch Button -->
-                    <button onclick="fetchRealtimeWeather()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 border-2 border-slate-800 font-extrabold text-xs px-2 py-1.5 rounded-xl shadow-xs flex items-center gap-1 transition-all active:scale-95 flex-shrink-0">
+                    <button onclick="fetchRealtimeWeather()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 border-2 border-slate-800 font-bold text-lg px-2 py-0.5 rounded-xl shadow-xs flex items-center gap-1 transition-all active:scale-95 flex-shrink-0">
                         <i data-lucide="refresh-cw" id="refresh-icon" class="w-3.5 h-3.5"></i>
                         <span>갱신</span>
                     </button>
@@ -201,21 +203,21 @@
                         <div class="calendar-ring"></div>
                     </div>
 
-                    <div class="calendar-card pt-4 pb-3 px-3 text-center border-3 border-slate-800">
-                        <div class="bg-pink-100 rounded-xl py-1 px-2 border-2 border-pink-300 mb-2">
-                            <span id="current-date" class="text-pink-600 font-bold text-base sm:text-lg tracking-wider">2026년 10월 21일</span>
+                    <div class="calendar-card pt-4 pb-1 px-3 text-center border-3 border-slate-800">
+                        <div class="bg-pink-100 rounded-xl py-0.5 px-1.5 border-2 border-pink-300 mb-1 overflow-hidden">
+                            <span id="current-date" class="text-pink-600 font-bold text-xl tracking-tight whitespace-nowrap block">2026년 10월 21일</span>
                         </div>
                         <div class="flex items-center justify-center gap-0.5">
-                            <span id="temp-display" class="text-5xl font-extrabold text-slate-800 tracking-tight">25</span>
-                            <span class="text-2xl font-bold text-slate-700 self-start mt-1">°C</span>
+                            <span id="temp-display" class="text-6xl font-bold text-slate-800 tracking-tight leading-none">25</span>
+                            <span class="text-3xl font-bold text-slate-700 self-start mt-1">°C</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right: Shivering Character & Speech Bubble -->
                 <div class="col-span-6 flex flex-col items-center justify-center relative pl-2">
-                    <div class="speech-bubble mb-2 w-full text-center">
-                        <p id="weather-comment" class="text-slate-800 font-bold text-lg leading-snug">
+                    <div class="speech-bubble mb-1 w-full text-center">
+                        <p id="weather-comment" class="text-slate-800 font-bold text-2xl leading-none pt-1">
                             어제보다 추워요.
                         </p>
                     </div>
@@ -227,28 +229,28 @@
             </div>
 
             <!-- EXTRA WEATHER STATS PANEL -->
-            <div id="v2-stats-panel" class="my-3 grid grid-cols-3 gap-2 relative z-10">
-                <div class="sketch-box-yellow p-2 rounded-xl text-center">
-                    <div class="text-xs text-slate-600 font-bold">습도</div>
-                    <div id="humidity-val" class="text-base font-extrabold text-slate-800">55%</div>
+            <div id="v2-stats-panel" class="my-2 grid grid-cols-3 gap-2 relative z-10">
+                <div class="sketch-box-yellow px-2 py-1 rounded-xl text-center">
+                    <div class="text-lg text-slate-600 font-bold leading-none">습도</div>
+                    <div id="humidity-val" class="text-2xl font-bold text-slate-800 leading-none">55%</div>
                 </div>
-                <div class="sketch-box-yellow p-2 rounded-xl text-center">
-                    <div class="text-xs text-slate-600 font-bold">풍속</div>
-                    <div id="wind-val" class="text-base font-extrabold text-slate-800">2.5m/s</div>
+                <div class="sketch-box-yellow px-2 py-1 rounded-xl text-center">
+                    <div class="text-lg text-slate-600 font-bold leading-none">풍속</div>
+                    <div id="wind-val" class="text-2xl font-bold text-slate-800 leading-none">2.5m/s</div>
                 </div>
-                <div class="sketch-box-yellow p-2 rounded-xl text-center">
-                    <div class="text-xs text-slate-600 font-bold">체감온도</div>
-                    <div id="feels-val" class="text-base font-extrabold text-slate-800">24°C</div>
+                <div class="sketch-box-yellow px-2 py-1 rounded-xl text-center">
+                    <div class="text-lg text-slate-600 font-bold leading-none">체감온도</div>
+                    <div id="feels-val" class="text-2xl font-bold text-slate-800 leading-none">24°C</div>
                 </div>
             </div>
 
             <!-- MIDDLE SECTION: HOURLY WEATHER GRAPH -->
-            <div class="mt-3 mb-3 sketch-box-blue p-3.5 rounded-2xl relative z-10">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="inline-block bg-amber-300 border-2 border-slate-800 px-4 py-1 rounded-full text-slate-900 font-extrabold text-base transform -rotate-1 shadow-xs">
+            <div class="mt-2 mb-2 sketch-box-blue p-3 rounded-2xl relative z-10">
+                <div class="flex items-center justify-between mb-1">
+                    <div class="inline-block bg-amber-300 border-2 border-slate-800 px-3 py-0 rounded-full text-slate-900 font-bold text-xl transform -rotate-1 shadow-xs leading-tight">
                         시간별 날씨
                     </div>
-                    <span id="location-badge" class="bg-emerald-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-slate-800">서울</span>
+                    <span id="location-badge" class="bg-emerald-500 text-white text-base font-bold px-2 py-0.5 rounded-full border border-slate-800 leading-none">서울</span>
                 </div>
 
                 <div class="relative w-full h-32 mt-1">
@@ -258,43 +260,43 @@
                 </div>
 
                 <div class="grid grid-cols-4 gap-1 text-center mt-1">
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">9시</span></div>
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">12시</span></div>
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">3시</span></div>
-                    <div><span class="bg-blue-500 text-white text-xs px-2.5 py-1 rounded-full border border-blue-700 font-bold shadow-xs">6시</span></div>
+                    <div><span class="bg-blue-500 text-white text-base px-2.5 py-0.5 rounded-full border border-blue-700 font-bold shadow-xs leading-none">9시</span></div>
+                    <div><span class="bg-blue-500 text-white text-base px-2.5 py-0.5 rounded-full border border-blue-700 font-bold shadow-xs leading-none">12시</span></div>
+                    <div><span class="bg-blue-500 text-white text-base px-2.5 py-0.5 rounded-full border border-blue-700 font-bold shadow-xs leading-none">3시</span></div>
+                    <div><span class="bg-blue-500 text-white text-base px-2.5 py-0.5 rounded-full border border-blue-700 font-bold shadow-xs leading-none">6시</span></div>
                 </div>
             </div>
 
             <!-- WEEKLY FORECAST PANEL -->
-            <div id="v2-weekly-panel" class="mb-3 bg-white border-3 border-slate-800 p-3 rounded-2xl relative z-10 shadow-xs">
-                <div class="text-slate-800 font-extrabold text-sm mb-2 flex items-center justify-between">
+            <div id="v2-weekly-panel" class="mb-2 bg-white border-3 border-slate-800 p-2.5 rounded-2xl relative z-10 shadow-xs">
+                <div class="text-slate-800 font-bold text-lg mb-1 flex items-center justify-between leading-none">
                     <span>📅 주간 날씨 예보</span>
                 </div>
-                <div class="grid grid-cols-5 gap-1.5 text-center text-xs" id="weekly-forecast-container">
+                <div class="grid grid-cols-5 gap-1 text-center" id="weekly-forecast-container">
                     <!-- Dynamic weekly weather forecast rendered via JS -->
                 </div>
             </div>
 
             <!-- BOTTOM SECTION: OUTFIT & ACTIVITY RECOMMENDATION CARDS -->
-            <div class="grid grid-cols-2 gap-3 mt-2 relative z-10">
-                <div class="sketch-box-green p-3 flex items-center gap-2 rounded-2xl border-3">
-                    <div id="clothes-icon" class="w-12 h-12 flex-shrink-0 flex items-center justify-center">
+            <div class="grid grid-cols-2 gap-2 mt-2 relative z-10">
+                <div class="sketch-box-green p-2.5 flex items-center gap-2 rounded-2xl border-3">
+                    <div id="clothes-icon" class="w-10 h-10 flex-shrink-0 flex items-center justify-center">
                         <!-- Dynamic Clothing SVG -->
                     </div>
                     <div class="flex-1">
-                        <p id="clothes-text" class="text-slate-800 font-extrabold text-sm sm:text-base leading-tight">
-                            도톰한 옷이 좋아요.
+                        <p id="clothes-text" class="text-slate-800 font-bold text-xl leading-tight keep-all break-keep">
+                            도톰한 옷을 입으세요!
                         </p>
                     </div>
                 </div>
 
-                <div class="sketch-box-green p-3 flex items-center gap-2 rounded-2xl border-3">
-                    <div id="activity-icon" class="w-12 h-12 flex-shrink-0 flex items-center justify-center">
+                <div class="sketch-box-green p-2.5 flex items-center gap-2 rounded-2xl border-3">
+                    <div id="activity-icon" class="w-10 h-10 flex-shrink-0 flex items-center justify-center">
                         <!-- Dynamic Activity SVG -->
                     </div>
                     <div class="flex-1">
-                        <p id="activity-text" class="text-slate-800 font-extrabold text-sm sm:text-base leading-tight">
-                            가볍게 달리기 좋아요.
+                        <p id="activity-text" class="text-slate-800 font-bold text-xl leading-tight keep-all break-keep">
+                            실내 활동을 추천해요.
                         </p>
                     </div>
                 </div>
@@ -302,7 +304,7 @@
         </div>
 
         <!-- BOTTOM DECORATIVE GRASS -->
-        <div class="w-full mt-4 flex justify-between items-end relative z-0">
+        <div class="w-full mt-3 flex justify-between items-end relative z-0">
             <svg class="w-full h-8 text-green-400" viewBox="0 0 100 20" preserveAspectRatio="none">
                 <path d="M0 20 Q 5 5 10 20 Q 15 8 20 20 Q 25 3 30 20 Q 35 7 40 20 Q 45 4 50 20 Q 55 8 60 20 Q 65 2 70 20 Q 75 6 80 20 Q 85 4 90 20 Q 95 9 100 20 Z" fill="currentColor" stroke="#1e293b" stroke-width="1"/>
             </svg>
@@ -334,7 +336,6 @@
 
         // PWA Setup & Manifest Generation
         function setupPWA() {
-            // Generate Data-URI PWA App Icon (SVG)
             const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#bae6fd"/><circle cx="50" cy="42" r="22" fill="#facc15" stroke="#1e293b" stroke-width="5"/><path d="M 50 10 L 50 4 M 50 74 L 50 80 M 18 42 L 12 42 M 82 42 L 88 42" stroke="#1e293b" stroke-width="5" stroke-linecap="round"/><path d="M 35 65 Q 25 45 45 45 Q 55 35 67 45 Q 77 50 73 65 Q 70 75 55 75 Q 40 75 35 65 Z" fill="#ffffff" stroke="#1e293b" stroke-width="5"/></svg>`;
             const iconUrl = 'data:image/svg+xml;base64,' + btoa(iconSvg);
 
@@ -361,7 +362,6 @@
             const manifestUrl = URL.createObjectURL(blob);
             document.getElementById('manifest-placeholder').setAttribute('href', manifestUrl);
 
-            // Register Inline Service Worker for Offline Capabilities
             if ('serviceWorker' in navigator) {
                 const swCode = `
                     const CACHE_NAME = 'sketch-weather-v1';
@@ -386,7 +386,6 @@
                 navigator.serviceWorker.register(swUrl).catch(err => console.log('SW registration error:', err));
             }
 
-            // Capture PWA Install Prompt
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
@@ -407,7 +406,6 @@
             }
         }
 
-        // GPS Geolocation Handler
         function requestGPSLocation(silent = false) {
             const gpsIcon = document.getElementById('gps-icon');
             if (gpsIcon) gpsIcon.classList.add('animate-spin');
@@ -420,7 +418,6 @@
                             lon: position.coords.longitude
                         };
                         
-                        // Select "GPS" in city dropdown
                         const citySelect = document.getElementById('city-select');
                         if (citySelect) citySelect.value = "GPS";
                         state.city = "GPS";
@@ -433,7 +430,6 @@
                         if (!silent) {
                             console.warn("GPS 수신 실패, 기본 위치(서울)를 사용합니다.", error);
                         }
-                        // Fallback to Seoul
                         state.city = "Seoul";
                         const citySelect = document.getElementById('city-select');
                         if (citySelect) citySelect.value = "Seoul";
@@ -467,7 +463,6 @@
             document.getElementById('current-date').innerText = `${year}년 ${month}월 ${date}일`;
         }
 
-        // Fetch Realtime Weather Data
         async function fetchRealtimeWeather() {
             const refreshIcon = document.getElementById('refresh-icon');
             if (refreshIcon) refreshIcon.classList.add('animate-spin');
@@ -544,7 +539,6 @@
             }
         }
 
-        // Render Character SVG
         function renderCharacter(temp) {
             const container = document.getElementById('character-svg');
             
@@ -583,7 +577,6 @@
             }
         }
 
-        // Render Clothing & Activity SVGs
         function renderRecommendations(temp) {
             const clothesIcon = document.getElementById('clothes-icon');
             const clothesText = document.getElementById('clothes-text');
@@ -632,7 +625,6 @@
             }
         }
 
-        // Render Hourly SVG Graph
         function renderHourlyGraph(temps) {
             const svg = document.getElementById('hourly-svg');
             const minTemp = Math.min(...temps) - 2;
@@ -665,14 +657,13 @@
             points.forEach((p) => {
                 svgContent += `
                     <circle cx="${p.x}" cy="${p.y}" r="6" fill="#facc15" stroke="#1e293b" stroke-width="2.5"/>
-                    <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" font-family="Jua" font-size="14" font-weight="bold" fill="#1e293b">${p.temp}°</text>
+                    <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" font-family="Dongle" font-size="20" font-weight="bold" fill="#1e293b">${p.temp}°</text>
                 `;
             });
 
             svg.innerHTML = svgContent;
         }
 
-        // Render Weekly Forecast
         function renderWeeklyForecast() {
             const container = document.getElementById('weekly-forecast-container');
             if (!container) return;
@@ -689,17 +680,16 @@
                 }
 
                 html += `
-                    <div class="bg-amber-50 p-1.5 rounded-xl border border-amber-200 flex flex-col items-center">
-                        <span class="font-extrabold text-slate-700">${item.day}</span>
+                    <div class="bg-amber-50 p-1 rounded-xl border border-amber-200 flex flex-col items-center">
+                        <span class="font-bold text-slate-700 text-lg leading-none">${item.day}</span>
                         <div class="my-0.5">${iconSvg}</div>
-                        <span class="font-extrabold text-slate-800 text-[11px]">${item.tempMin}° / ${item.tempMax}°</span>
+                        <span class="font-bold text-slate-800 text-lg leading-none">${item.tempMin}°/${item.tempMax}°</span>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        // Main UI Update Function
         function updateUI() {
             document.getElementById('temp-display').innerText = state.temp;
             
@@ -720,11 +710,9 @@
             lucide.createIcons();
         }
 
-        // Initialization
         window.onload = function() {
             setTodayDate();
             setupPWA();
-            // Automatically request GPS on app launch
             requestGPSLocation(true);
         };
     </script>
